@@ -26,3 +26,16 @@ body.party-flash{animation:partyFlash .28s ease-in-out 4}
 @keyframes pulseParty{from{transform:scale(.99)}to{transform:scale(1.02)}}
 @keyframes cupShake{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
 @keyframes partyFlash{50%{filter:brightness(1.35)}}
+
+/* ===== Round flow + sound controls ===== */
+.headerRight{display:flex;align-items:center;gap:8px}
+.soundToggle{width:auto;margin:0;padding:8px 10px;border-radius:999px;font-size:10px;background:#ffffff12;border:1px solid #ffffff20;white-space:nowrap}
+.waitMessage{font-size:12px;color:#9fa8d1;min-height:18px;margin-top:4px}
+.countdown{position:fixed;inset:0;z-index:9000;display:grid;place-items:center;background:#050711dd;font-size:min(42vw,220px);font-weight:1000;color:#ffd65a;text-shadow:0 0 50px #ffb300;animation:countPop .65s ease both}
+@keyframes countPop{0%{transform:scale(.45);opacity:.2}45%{transform:scale(1.2);opacity:1}100%{transform:scale(.9);opacity:.9}}
+.choice.locked{opacity:.55;filter:saturate(.45);pointer-events:none}
+.overlay-result{font-size:18px;font-weight:900;color:#fff;margin-bottom:8px;letter-spacing:1px}
+.result-party-card{overflow:hidden;position:relative}
+.result-party-card:before,.result-party-card:after{content:"✦";position:absolute;font-size:40px;color:#ffd65a;animation:spark 1s infinite}
+.result-party-card:before{left:20px;top:20px}.result-party-card:after{right:20px;top:20px;animation-delay:.35s}
+@keyframes spark{50%{transform:scale(1.7) rotate(45deg);opacity:.35}}

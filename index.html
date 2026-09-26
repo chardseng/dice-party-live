@@ -7,7 +7,7 @@
 </head>
 <body>
 <div id="app">
-  <header><div class="brand">🎲 DICE PARTY <span>LIVE</span></div><div id="status">● Ready</div></header>
+  <header><div class="brand">🎲 DICE PARTY <span>LIVE</span></div><div class="headerRight"><button id="soundToggle" class="soundToggle">🔊 SOUND ON</button><div id="status">● Ready</div></div></header>
 
   <main>
     <section id="home" class="screen active">
@@ -38,6 +38,8 @@
       <div class="topline"><span>ROUND <b id="round">1</b></span><span id="chosenCount">0 READY</span></div>
       <div class="card center">
         <div id="callout" class="callout">MAKE YOUR CHOICE!</div>
+        <div id="waitMessage" class="waitMessage">Waiting for predictions…</div>
+        <div id="countdown" class="countdown hidden">3</div>
         <div class="choices">
           <button id="low" class="choice low">LOW<small>Total 3–10</small></button>
           <button id="high" class="choice high">HIGH<small>Total 11–18</small></button>
@@ -56,9 +58,10 @@
 <div id="resultOverlay" class="result-overlay hidden" aria-live="assertive">
   <div class="result-party-card">
     <div id="overlayIcon" class="overlay-icon">🥤</div>
+    <div id="overlayResult" class="overlay-result"></div>
     <div id="overlayTitle" class="overlay-title">HALF GLASS!</div>
     <div id="overlayNames" class="overlay-names"></div>
-    <div class="overlay-note">Party challenge — non-alcoholic drink only</div>
+    <div class="overlay-note">Party challenge — use a non-alcoholic drink</div>
   </div>
 </div>
 
