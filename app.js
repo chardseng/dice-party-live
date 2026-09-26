@@ -10,7 +10,61 @@ const $=id=>document.getElementById(id);
 const show=id=>{document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));$(id).classList.add("active")};
 const code=()=>Math.random().toString(36).slice(2,8).toUpperCase();
 const diceChar=n=>"⚀⚁⚂⚃⚄⚅"[n-1];
-function beep(freq=440,d=.08){try{const a=new AudioContext(),o=a.createOscillator(),g=a.createGain();o.frequency.value=freq;o.connect(g);g.connect(a.destination);g.gain.value=.035;o.start();o.stop(a.currentTime+d)}catch{}}
+let audioCtx=null;
+function audio(){
+  try{
+    audioCtx ||= new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==="suspended") audioCtx.resume();
+    return audioCtx;
+  }catch{return null}
+}
+function tone(freq=440,d=.08,type="square",gain=.035,delay=0){
+  try{
+    const a=audio(); if(!a)return;
+    const o=a.createOscillator(),g=a.createGain();
+    o.type=type;o.frequency.value=freq;
+    g.gain.setValueAtTime(gain,a.currentTime+delay);
+    g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+delay+d);
+    o.connect(g);g.connect(a.destination);
+    o.start(a.currentTime+delay);o.stop(a.currentTime+delay+d);
+  }catch{}
+}
+function beep(freq=440,d=.08){tone(freq,d,"square",.035)}
+function buttonSound(){tone(650,.055,"square",.022)}
+function countdownSound(){[0,.18,.36].forEach((x,i)=>tone(380+i*90,.11,"square",.035,x));tone(820,.22,"sawtooth",.04,.55)}
+function diceSound(){for(let i=0;i<14;i++)tone(120+Math.random()*240,.045,"square",.018,i*.045)}
+function winSound(){[523,659,784,1047].forEach((f,i)=>tone(f,.22,"triangle",.04,i*.09))}
+function loseSound(){[330,247,196].forEach((f,i)=>tone(f,.28,"sawtooth",.035,i*.12))}
+document.addEventListener("pointerdown",e=>{audio();if(e.target.closest("button"))buttonSound()},{passive:true});
+
+let lastPartyKey="";
+function showPartyResult(){
+  if(!state?.dice || !state?.players)return;
+  const key=`${state.round}|${state.dice.join(",")}`;
+  if(key===lastPartyKey)return;
+  lastPartyKey=key;
+
+  const total=state.dice.reduce((a,b)=>a+b,0);
+  const winning=total<=10?"low":"high";
+  const losers=Object.values(state.players).filter(p=>p.choice && p.choice!==winning).map(p=>p.name);
+  const mine=state.players?.[uid];
+  const overlay=$("resultOverlay");
+
+  diceSound();
+  setTimeout(()=>{
+    if(mine?.choice===winning) winSound();
+    else if(mine?.choice) loseSound();
+
+    if(losers.length && overlay){
+      $("overlayTitle").textContent="HALF GLASS!";
+      $("overlayNames").textContent=`${losers.join(" • ")} — LOST`;
+      overlay.classList.remove("hidden");
+      document.body.classList.add("party-flash");
+      setTimeout(()=>document.body.classList.remove("party-flash"),1200);
+      setTimeout(()=>overlay.classList.add("hidden"),3400);
+    }
+  },500);
+}
 
 async function boot(){
   const cred=await signInAnonymously(auth); uid=cred.user.uid;
@@ -60,6 +114,7 @@ function renderGame(){
    const t=state.dice.reduce((a,b)=>a+b,0), result=t<=10?"LOW":"HIGH";
    $("total").textContent=`TOTAL ${t}`; $("result").textContent=`${result}!`;
    $("callout").textContent="ROUND RESULT";
+   showPartyResult();
    $("roll").classList.add("hidden"); $("next").classList.remove("hidden");
  }else{
    $("diceBox").innerHTML="<span>⚀</span><span>⚀</span><span>⚀</span>";
@@ -74,7 +129,7 @@ async function choose(c){if(state?.status!=="choosing"||state.dice)return;beep(c
 $("roll").onclick=async()=>{
  if(!isHost||state.status!=="choosing")return;
  const ps=Object.values(state.players||{}); if(ps.some(p=>!p.choice))return alert("Wait until everyone has chosen.");
- $("diceBox").classList.add("rolling"); beep(240,.2);
+ $("diceBox").classList.add("rolling"); countdownSound(); setTimeout(diceSound,520);
  setTimeout(()=> $("diceBox").classList.remove("rolling"),800);
  const d=[1,2,3].map(()=>Math.floor(Math.random()*6)+1), total=d.reduce((a,b)=>a+b,0), result=total<=10?"low":"high";
  const updates={dice:d,status:"result"};

@@ -12,3 +12,17 @@ input,button{width:100%;border:0;border-radius:15px;padding:16px;font-size:16px;
 .dicebox{display:flex;justify-content:center;gap:14px;font-size:66px;margin:25px 0 4px}.dicebox.rolling{animation:shake .12s infinite}@keyframes shake{25%{transform:rotate(3deg) translateX(3px)}75%{transform:rotate(-3deg) translateX(-3px)}}.total{font-size:20px;font-weight:900}.result{font-size:30px;font-weight:1000;min-height:42px;color:#ffd65a;margin:5px}.hidden{display:none!important}
 .scoreRow{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #ffffff12}.winner{animation:pop .5s}@keyframes pop{50%{transform:scale(1.08)}}
 @media(max-width:360px){h1{font-size:28px}.dicebox{font-size:55px}.roomcode{font-size:40px}}
+
+/* ===== Party result upgrade ===== */
+.result-overlay{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at center,#ffbd2433,#050711f5);backdrop-filter:blur(7px);animation:overlayIn .22s ease-out}
+.result-overlay.hidden{display:none!important}
+.result-party-card{width:min(92vw,500px);text-align:center;padding:32px 22px;border-radius:28px;border:2px solid #ffd65acc;background:linear-gradient(180deg,#21180c,#090b14);box-shadow:0 0 60px #ffb30055;animation:pulseParty .65s ease-in-out infinite alternate}
+.overlay-icon{font-size:76px;animation:cupShake .42s ease-in-out infinite;filter:drop-shadow(0 0 20px #ffd65a88)}
+.overlay-title{font-size:clamp(40px,11vw,72px);font-weight:1000;letter-spacing:2px;color:#ffd65a;text-shadow:0 0 25px #ffb30066}
+.overlay-names{font-size:clamp(22px,6vw,34px);font-weight:1000;margin-top:8px}
+.overlay-note{font-size:13px;color:#bfc6df;margin-top:13px}
+body.party-flash{animation:partyFlash .28s ease-in-out 4}
+@keyframes overlayIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+@keyframes pulseParty{from{transform:scale(.99)}to{transform:scale(1.02)}}
+@keyframes cupShake{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+@keyframes partyFlash{50%{filter:brightness(1.35)}}
