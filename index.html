@@ -1,90 +1,72 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#06101f">
-<title>Dice Party Live</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05070d"><title>Dice Party Live</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div class="lights"></div>
 <div id="app">
-<header>
-  <div class="brand">🎲 DICE PARTY <span>LIVE</span></div>
-  <div class="headerRight"><button id="soundToggle" class="soundToggle">🔊 SOUND ON</button><div id="status">● Ready</div></div>
-</header>
-
+<header><div class="brand">🎲 DICE PARTY <b>LIVE</b></div><div class="tools"><button id="sound">🔊</button><span id="status">● Ready</span></div></header>
 <main>
 <section id="home" class="screen active">
-  <div class="hero">
-    <div class="dicehero">⚄ ⚁ ⚅</div>
-    <h1>BIG & SMALL</h1>
-    <p>One room · many phones · same dice</p>
-  </div>
-  <div class="card">
-    <input id="name" maxlength="16" placeholder="Your nickname">
-    <button id="create" class="primary">CREATE ROOM</button>
-    <div class="or">— OR JOIN —</div>
-    <input id="roomInput" maxlength="6" placeholder="ROOM CODE">
-    <button id="join">JOIN ROOM</button>
-  </div>
+ <div class="hero"><div class="heroDice">⚄ ⚂ ⚅</div><h1>BIG <i>&</i> SMALL</h1><p>LIVE PARTY DICE</p></div>
+ <div class="panel">
+  <input id="name" maxlength="16" placeholder="YOUR NICKNAME">
+  <button id="create" class="gold">CREATE ROOM</button>
+  <div class="divider">OR JOIN FRIENDS</div>
+  <input id="roomInput" maxlength="6" placeholder="ROOM CODE">
+  <button id="join">JOIN ROOM</button>
+ </div>
 </section>
 
 <section id="lobby" class="screen">
-  <div class="card center">
-    <small>ROOM CODE</small><div id="roomCode" class="roomcode">------</div>
-    <p>Share this code with your friends</p>
-    <div id="players" class="players"></div>
-    <button id="start" class="primary hostOnly">START GAME</button>
-  </div>
+ <div class="panel center">
+  <div class="eyebrow">LIVE ROOM</div><div id="roomCode" class="roomCode">------</div>
+  <p class="muted">Share this code with your players</p>
+  <div id="players" class="players"></div>
+  <button id="start" class="gold hostOnly">START PARTY</button>
+ </div>
 </section>
 
 <section id="game" class="screen">
-  <div class="topline"><span>ROUND <b id="round">1</b></span><span id="chosenCount">0/0 READY</span></div>
-
-  <div class="gamecard">
-    <div class="neonTitle">BIG <span>&</span> SMALL</div>
-    <div id="phaseLabel" class="phaseLabel">MAKE YOUR PREDICTION</div>
-    <div id="waitMessage" class="waitMessage">Choose SMALL or BIG</div>
-
-    <div class="choices">
-      <button id="small" class="choice small">SMALL<small>Total 3–10</small></button>
-      <button id="big" class="choice big">BIG<small>Total 11–18</small></button>
-    </div>
-
-    <div id="countdownInline" class="countdownInline hidden">3</div>
-    <div id="diceBox" class="dicebox"><span>⚀</span><span>⚀</span><span>⚀</span></div>
-    <div id="total" class="total">TOTAL —</div>
-    <div id="result" class="result"></div>
-
-    <div id="personalResult" class="personalResult hidden">
-      <div id="personalBadge" class="personalBadge"></div>
-      <div id="personalText" class="personalText"></div>
-      <div id="challenge" class="challenge hidden">🥤 HALF GLASS CHALLENGE</div>
-      <div id="challengeNote" class="challengeNote hidden">Non-alcoholic party challenge</div>
-    </div>
-
-    <button id="next" class="primary hostOnly hidden">CONTINUE NEXT ROUND</button>
-  </div>
-
-  <div class="card"><h3>🏆 PLAYERS</h3><div id="scores"></div></div>
+ <div class="roundbar"><span>ROUND <b id="round">1</b></span><span id="ready">0/0 READY</span></div>
+ <div class="table">
+   <div class="marquee">✦ BIG <em>&</em> SMALL ✦</div>
+   <div id="phase" class="phase">MAKE YOUR PREDICTION</div>
+   <div id="subphase" class="subphase">Choose before the table locks</div>
+   <div class="choiceRow">
+    <button id="small" class="choice small"><span>SMALL</span><small>3–10</small></button>
+    <button id="big" class="choice big"><span>BIG</span><small>11–18</small></button>
+   </div>
+   <div id="waiting" class="waiting hidden"><span></span><span></span><span></span> WAITING FOR PLAYERS</div>
+   <div id="diceStage" class="diceStage">
+    <div class="halo"></div>
+    <div id="diceBox" class="diceBox"><b>⚀</b><b>⚀</b><b>⚀</b></div>
+   </div>
+   <div id="total" class="total">TOTAL —</div>
+   <div id="result" class="result"></div>
+   <div id="myResult" class="myResult hidden">
+      <strong id="myResultTitle"></strong><span id="myResultText"></span>
+      <div id="halfGlass" class="halfGlass hidden">🥤 HALF GLASS CHALLENGE<small>Non-alcoholic party challenge</small></div>
+   </div>
+   <button id="next" class="gold hostOnly hidden">NEXT ROUND</button>
+ </div>
+ <div class="panel scorePanel"><h3>🏆 SCOREBOARD</h3><div id="scores"></div></div>
 </section>
 </main>
 </div>
 
-<div id="countdownOverlay" class="countdownOverlay hidden"><div id="countdownBig">3</div><small>GET READY</small></div>
-
-<div id="resultOverlay" class="resultOverlay hidden" aria-live="assertive">
-  <div id="overlayCard" class="overlayCard">
-    <div id="overlayIcon" class="overlayIcon">🎉</div>
-    <div id="overlayResult" class="overlayResult"></div>
-    <div id="overlayTitle" class="overlayTitle"></div>
-    <div id="overlayNames" class="overlayNames"></div>
-    <div id="overlayChallenge" class="overlayChallenge hidden">🥤 HALF GLASS CHALLENGE</div>
-    <div id="overlayNote" class="overlayNote hidden">Use a non-alcoholic drink</div>
-    <button id="closeOverlay" class="closeOverlay">OK</button>
-  </div>
+<div id="countdown" class="takeover hidden"><div id="countNum">3</div><p>CHOICES LOCKED</p></div>
+<div id="resultTakeover" class="takeover hidden">
+ <div id="resultCard" class="resultCard">
+  <div id="resultIcon" class="resultIcon">🎉</div>
+  <div id="resultLine" class="resultLine"></div>
+  <h2 id="resultTitle"></h2><p id="resultMessage"></p>
+  <div id="bigChallenge" class="bigChallenge hidden">🥤 HALF GLASS!<small>Non-alcoholic party challenge</small></div>
+  <button id="dismiss">CONTINUE</button>
+ </div>
 </div>
-
 <script type="module" src="app.js"></script>
 </body></html>
