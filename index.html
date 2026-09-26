@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Dice Party Live</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <header><div class="brand">🎲 DICE PARTY <span>LIVE</span></div><div id="status">● Ready</div></header>
+
+  <main>
+    <section id="home" class="screen active">
+      <div class="hero">
+        <div class="dicehero">⚄ ⚁ ⚅</div>
+        <h1>PLAY TOGETHER</h1>
+        <p>One room. Many phones. Same dice.</p>
+      </div>
+      <div class="card">
+        <input id="name" maxlength="16" placeholder="Your nickname">
+        <button id="create" class="primary">CREATE ROOM</button>
+        <div class="or">— OR JOIN —</div>
+        <input id="roomInput" maxlength="6" placeholder="ROOM CODE">
+        <button id="join">JOIN ROOM</button>
+      </div>
+    </section>
+
+    <section id="lobby" class="screen">
+      <div class="card center">
+        <small>ROOM CODE</small><div id="roomCode" class="roomcode">------</div>
+        <p>Share this code with your friends</p>
+        <div id="players" class="players"></div>
+        <button id="start" class="primary hostOnly">START ROUND</button>
+      </div>
+    </section>
+
+    <section id="game" class="screen">
+      <div class="topline"><span>ROUND <b id="round">1</b></span><span id="chosenCount">0 READY</span></div>
+      <div class="card center">
+        <div id="callout" class="callout">MAKE YOUR CHOICE!</div>
+        <div class="choices">
+          <button id="low" class="choice low">LOW<small>Total 3–10</small></button>
+          <button id="high" class="choice high">HIGH<small>Total 11–18</small></button>
+        </div>
+        <div id="diceBox" class="dicebox"><span>⚀</span><span>⚀</span><span>⚀</span></div>
+        <div id="total" class="total">TOTAL —</div>
+        <div id="result" class="result"></div>
+        <button id="roll" class="primary hostOnly">ROLL FOR EVERYONE</button>
+        <button id="next" class="primary hostOnly hidden">NEXT ROUND</button>
+      </div>
+      <div class="card"><h3>🏆 SCOREBOARD</h3><div id="scores"></div></div>
+    </section>
+  </main>
+</div>
+<script type="module" src="app.js"></script>
+</body></html>
