@@ -90,3 +90,31 @@ input{font-size:16px!important}
 .halfGlassBig{font-size:clamp(34px,10vw,56px);font-weight:1000;line-height:1;color:#fff;text-shadow:0 0 12px #ff3048,0 0 28px #ff3048;margin-top:6px}
 .halfGlassSub{font-size:13px;font-weight:800;letter-spacing:.4px;color:#ffd9dd;margin-top:7px}
 @keyframes halfPop{0%{transform:scale(.35);opacity:0}75%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+
+/* V10 — graphic result screens, compact mobile safe */
+#resultTakeover{padding:10px;overflow:auto;align-items:center}
+.resultCard{width:min(94vw,470px);max-height:calc(100dvh - 20px);overflow:auto;padding:18px 16px 16px!important}
+.resultCard.playerLose .jackpotDice,.resultCard.playerLose .jackpotTotal,.resultCard.playerLose .jackpotWin,.resultCard.playerLose .resultLine{display:none!important}
+.resultCard.playerLose{background:radial-gradient(circle at 50% 30%,rgba(255,25,35,.30),rgba(22,0,5,.98) 62%);border:2px solid #ff334c;box-shadow:0 0 42px rgba(255,25,50,.48)}
+.resultCard.playerLose #resultTitle{font-size:clamp(44px,13vw,70px)!important;line-height:.95;margin:8px 0 10px;color:white!important;text-shadow:0 0 8px #fff,0 0 18px #ff2038,0 0 36px #ff2038}
+.resultCard.playerWin{background:radial-gradient(circle at 50% 28%,rgba(20,160,55,.25),rgba(2,18,8,.98) 64%);border:2px solid #42ff79;box-shadow:0 0 42px rgba(40,255,100,.35)}
+.resultCard.playerWin #resultTitle{font-size:clamp(42px,12vw,68px)!important;line-height:.95;color:#fff!important;text-shadow:0 0 8px #fff,0 0 20px #20e65b,0 0 38px #20e65b}
+.halfGlassCard{margin:10px auto 8px!important;padding:10px 12px 12px!important;max-width:390px}
+.halfGlassIcon{font-size:42px!important}
+.halfGlassBig{font-size:clamp(42px,13vw,64px)!important;line-height:.9!important}
+.halfGlassSub{font-size:11px!important}
+.resultChoice{font-size:clamp(18px,5vw,24px);font-weight:900;margin:7px 0 9px;padding:10px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.28)}
+.resultCard.playerLose .resultChoice{border-color:#ff5a6a;color:#fff}
+.resultCard.playerWin .resultChoice{border-color:#48ff7b;color:#fff}
+@media(max-width:560px){
+ #resultTakeover{padding:6px}
+ .resultCard{width:96vw;max-height:calc(100dvh - 12px);padding:12px 12px 14px!important}
+ .resultDecor{font-size:17px!important;margin:0!important}
+ .resultCard.playerLose #resultTitle,.resultCard.playerWin #resultTitle{font-size:12vw!important;margin:4px 0 7px!important}
+ .halfGlassCard{padding:8px 10px 9px!important;margin:7px auto!important}
+ .halfGlassIcon{font-size:34px!important}
+ .halfGlassBig{font-size:12vw!important}
+ .halfGlassSub{font-size:10px!important;margin-top:4px!important}
+ .resultChoice{font-size:17px;padding:8px;margin:5px 0}
+ #next{min-height:48px;margin-top:8px;position:relative;z-index:5}
+}
