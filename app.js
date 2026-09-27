@@ -15,6 +15,13 @@ function noAmb(){clearInterval(amb);amb=null}
 function lobbyBeat(){if(!lobbyMusicOn||!soundOn||state?.status!=="lobby")return;[262,330,392,523,392,330,294,440].forEach((f,i)=>tone(f,.12,i%2?"triangle":"square",.008,i*.13));tone(1046,.08,"sine",.012,.38)}
 function startLobbyMusic(){if(lobbyMusicTimer||!lobbyMusicOn)return;lobbyBeat();lobbyMusicTimer=setInterval(lobbyBeat,2600)}
 function stopLobbyMusic(){clearInterval(lobbyMusicTimer);lobbyMusicTimer=null}
+function loserResultSound(){
+  tone(392,.16,"sawtooth",.035,0);
+  tone(330,.18,"sawtooth",.035,.13);
+  tone(262,.28,"triangle",.045,.27);
+  tone(740,.055,"square",.014,.58);
+  tone(620,.055,"square",.014,.67);
+}
 function jackpotSound(){[523,659,784,1047,1319].forEach((f,i)=>tone(f,.3,"triangle",.045,i*.09));for(let i=0;i<9;i++)tone(900+i*85,.055,"square",.012,.48+i*.045)}
 
 document.addEventListener("pointerdown",e=>{ac();if(e.target.closest("button"))click()},{passive:true});
@@ -55,9 +62,16 @@ async function hostRoll(){if(rolling)return;rolling=true;await update(ref(db,`ro
 function rollAnim(){let i=0;$("diceBox").classList.add("rolling");const t=setInterval(()=>{if(!state||state.status!=="rolling"){clearInterval(t);$("diceBox").classList.remove("rolling");return}$("diceBox").innerHTML=[1,2,3].map(()=>`<b>${die(Math.floor(Math.random()*6)+1)}</b>`).join("");if(++i===1)diceSound()},85)}
 function resultPopup(){const key=`${state.round}-${(state.dice||[]).join("")}-${state.result}`;if(lastResult===key)return;lastResult=key;const mine=state.players?.[uid],won=mine?.choice===state.result;$("resultLine").textContent="FINAL DRAW";$("jackpotDice").textContent=(state.dice||[]).map(die).join(" ");$("jackpotTotal").textContent=state.total;$("jackpotWin").textContent=`${state.result.toUpperCase()} WINS!`;$("resultTitle").textContent=won?"🏆 YOU WIN!":"❌ YOU LOSE!";
 $("halfGlassCard").classList.toggle("hidden",won);
-$("resultChoice").textContent=`Your choice: ${(mine?.choice||"").toUpperCase()} ${won?"✓":"✕"}`;$("personalDraw").innerHTML=`DRAW RESULT <span class="drawNo">${state.total}</span>`;
+$("resultChoice").textContent=`Your choice: ${(mine?.choice||"").toUpperCase()} ${won?"✓":"✕"}`;
+$("loseDrawPanel").classList.toggle("hidden",won);
+if(!won){
+  $("loseDice").textContent=(state.dice||[]).map(die).join(" ");
+  $("loseTotal").textContent=state.total;
+  $("loseSide").textContent=state.result.toUpperCase();
+  $("loseSide").className=`loseSide ${state.result}`;
+}
 $("resultCard").classList.toggle("playerWin",won);
-$("resultCard").classList.toggle("playerLose",!won);$("resultIcon").textContent=won?"🎉":"🥤";$("resultMessage").textContent=won?"Great prediction!":`${mine?.name||"Player"}, your prediction lost this round.`;$("bigChallenge").classList.toggle("hidden",won||!mine?.choice);$("resultCard").classList.toggle("lose",!won&&!!mine?.choice);$("resultTakeover").classList.remove("hidden");if(won)jackpotSound();setTimeout(()=>won?win():lose(),520)}
+$("resultCard").classList.toggle("playerLose",!won);$("resultIcon").textContent=won?"🎉":"🥤";$("resultMessage").textContent=won?"Great prediction!":`${mine?.name||"Player"}, your prediction lost this round.`;$("bigChallenge").classList.toggle("hidden",won||!mine?.choice);$("resultCard").classList.toggle("lose",!won&&!!mine?.choice);$("resultTakeover").classList.remove("hidden");if(won)jackpotSound();else loserResultSound();setTimeout(()=>won?win():lose(),520)}
 $("dismiss").onclick=()=>$("resultTakeover").classList.add("hidden");
 $("small").onclick=()=>choose("small");$("big").onclick=()=>choose("big");
 async function choose(c){if(state?.status!=="choosing")return;tone(c==="small"?360:560,.14,"triangle",.035);await set(ref(db,`rooms/${room}/players/${uid}/choice`),c)}

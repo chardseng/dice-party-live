@@ -119,12 +119,57 @@ input{font-size:16px!important}
  #next{min-height:48px;margin-top:8px;position:relative;z-index:5}
 }
 
-/* V11 — show final draw number on personal result */
-.personalDraw{margin:6px auto 8px;text-align:center;font-weight:900;font-size:18px;color:#dce8ff}
-.personalDraw .drawNo{display:inline-block;font-size:clamp(42px,12vw,62px);line-height:.9;font-weight:1000;color:#fff;margin:0 7px;text-shadow:0 0 12px #fff,0 0 24px #ff9f00}
-.resultCard.playerLose .personalDraw{color:#ffd5da}
-.resultCard.playerLose .personalDraw .drawNo{text-shadow:0 0 10px #fff,0 0 24px #ff3048}
-@media(max-width:560px){
- .personalDraw{font-size:14px;margin:3px auto 5px}
- .personalDraw .drawNo{font-size:11vw}
+/* V12 — loser draw animation + compact mobile-safe layout */
+.loseDrawPanel{
+  margin:7px auto 8px;
+  padding:9px 10px 10px;
+  max-width:390px;
+  border:2px solid rgba(255,190,40,.9);
+  border-radius:17px;
+  background:radial-gradient(circle at 50% 20%,rgba(255,128,0,.20),rgba(20,0,5,.92) 72%);
+  box-shadow:0 0 22px rgba(255,145,0,.28),inset 0 0 18px rgba(255,255,255,.05);
+  text-align:center;
 }
+.loseDrawLabel{font-size:12px;font-weight:1000;letter-spacing:1.4px;color:#ffe3a0}
+.loseDice{
+  margin:2px 0 3px;
+  font-size:clamp(34px,10vw,48px);
+  line-height:1;
+  letter-spacing:4px;
+  filter:drop-shadow(0 0 10px rgba(255,255,255,.3));
+  animation:diceReveal .55s cubic-bezier(.2,1.45,.5,1);
+}
+.loseDrawBottom{display:flex;justify-content:center;align-items:center;gap:12px}
+.loseTotal{
+  font-size:clamp(46px,13vw,66px);
+  line-height:.9;
+  font-weight:1000;
+  color:#fff;
+  text-shadow:0 0 9px #fff,0 0 22px #ff9b00;
+  animation:numberReveal .65s cubic-bezier(.2,1.5,.5,1);
+}
+.loseSide{
+  min-width:82px;
+  padding:7px 12px;
+  border-radius:999px;
+  font-size:clamp(20px,6vw,28px);
+  font-weight:1000;
+  color:#fff;
+  border:2px solid currentColor;
+  animation:sideFlash .55s ease-in-out 3 alternate;
+}
+.loseSide.big{background:#b50b1a;color:#ffd65a;box-shadow:0 0 18px #ff334f}
+.loseSide.small{background:#073c9a;color:#9dd8ff;box-shadow:0 0 18px #168cff}
+@keyframes diceReveal{0%{transform:scale(.2) rotate(-18deg);opacity:0}70%{transform:scale(1.15) rotate(3deg)}100%{transform:scale(1);opacity:1}}
+@keyframes numberReveal{0%{transform:scale(.25);opacity:0}70%{transform:scale(1.18)}100%{transform:scale(1);opacity:1}}
+@keyframes sideFlash{to{filter:brightness(1.65);transform:scale(1.07)}}
+@media(max-width:560px){
+  .loseDrawPanel{margin:5px auto 6px;padding:7px 8px 8px}
+  .loseDrawLabel{font-size:10px}
+  .loseDice{font-size:9vw;margin:1px 0}
+  .loseTotal{font-size:12vw}
+  .loseSide{font-size:5vw;padding:5px 10px;min-width:70px}
+  .resultCard.playerLose .halfGlassBig{font-size:11vw!important}
+  .resultCard.playerLose .halfGlassIcon{font-size:30px!important}
+}
+.allResultPanel{margin:14px 0;padding:15px 12px;border:2px solid #ffc33d;border-radius:22px;background:#080e20;box-shadow:0 0 28px #ffae003d;text-align:center;animation:sharedPop .5s ease}.allResultTitle{font-size:15px;font-weight:1000;letter-spacing:2px;color:#ffe09a}.allResultDice{font-size:clamp(38px,11vw,58px);letter-spacing:5px;margin:5px}.allResultMain{display:flex;justify-content:center;align-items:center;gap:14px;margin:3px 0 12px}#allResultTotal{font-size:clamp(58px,17vw,90px);font-weight:1000;color:#fff;text-shadow:0 0 25px #ff9d00}#allResultSide{font-size:clamp(25px,7vw,38px);padding:7px 14px;border-radius:999px}#allResultSide.big{color:#ffd454;background:#a70716}#allResultSide.small{color:#9cddff;background:#073b91}.allLoserTitle{font-size:clamp(22px,6vw,32px);font-weight:1000;color:#fff;text-shadow:0 0 13px #ff3048}.allLoserNames{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}.allLoserNames span{padding:9px 14px;border:2px solid #ff6675;border-radius:999px;background:#b60b20;color:#fff;font-size:clamp(18px,5vw,26px);font-weight:1000}@keyframes sharedPop{from{transform:scale(.75);opacity:0}to{transform:scale(1);opacity:1}}
