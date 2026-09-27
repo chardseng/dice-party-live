@@ -56,6 +56,12 @@
  <div class="panel scorePanel"><h3>🏆 SCOREBOARD</h3><div id="scores"></div></div>
 </section>
 </main>
+<button id="chatFab" class="chatFab hidden">💬 CHAT <b id="chatBadge" class="hidden">0</b></button>
+<aside id="chatPanel" class="chatPanel">
+<div class="chatHead"><div><strong>💬 ROOM CHAT</strong><small id="chatRoom">Private room</small></div><button id="chatClose">✕</button></div>
+<div id="chatMessages" class="chatMessages"></div>
+<div class="chatComposer"><input id="chatInput" maxlength="180" placeholder="Message your room…"><button id="chatSend">SEND</button></div>
+</aside>
 </div>
 
 <div id="countdown" class="takeover hidden"><div id="countNum">3</div><p>CHOICES LOCKED</p></div>

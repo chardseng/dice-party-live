@@ -1,9 +1,9 @@
 import {initializeApp} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import {getAuth,signInAnonymously} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
-import {getDatabase,ref,set,get,update,onValue,onDisconnect} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+import {getDatabase,ref,set,get,update,onValue,onDisconnect,push,query,limitToLast} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 import {firebaseConfig} from "./firebase-config.js";
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
-let uid="",room="",me="",state=null,isHost=false,soundOn=true,ctx=null,amb=null,lastCd="",lastResult="",rolling=false;
+let uid="",room="",me="",state=null,isHost=false,soundOn=true,ctx=null,amb=null,lastCd="",lastResult="",rolling=false,chatStarted=false,chatOpen=false,lastSeenChat=0;
 const $=x=>document.getElementById(x),show=x=>{document.querySelectorAll(".screen").forEach(e=>e.classList.remove("active"));$(x).classList.add("active")};
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])),die=n=>"⚀⚁⚂⚃⚄⚅"[n-1];
 function ac(){if(!soundOn)return null;try{ctx||=new(window.AudioContext||window.webkitAudioContext)();if(ctx.state==="suspended")ctx.resume();return ctx}catch{return null}}
@@ -17,7 +17,7 @@ $("sound").onclick=()=>{soundOn=!soundOn;$("sound").textContent=soundOn?"🔊":"
 signInAnonymously(auth).then(c=>{uid=c.user.uid;$("status").textContent="● Online"}).catch(()=>{$("status").textContent="● Setup needed"});
 $("create").onclick=async()=>{me=$("name").value.trim()||"Host";room=Math.random().toString(36).slice(2,8).toUpperCase();await set(ref(db,`rooms/${room}`),{host:uid,status:"lobby",round:0,dice:null,result:null,total:null,countdownEnd:null,created:Date.now()});await joinPlayer();watch()};
 $("join").onclick=async()=>{me=$("name").value.trim()||"Player";room=$("roomInput").value.trim().toUpperCase();if(!room)return alert("Enter room code.");const s=await get(ref(db,`rooms/${room}`));if(!s.exists())return alert("Room not found.");await joinPlayer();watch()};
-async function joinPlayer(){await set(ref(db,`rooms/${room}/players/${uid}`),{name:me,score:0,choice:"",online:true});onDisconnect(ref(db,`rooms/${room}/players/${uid}/online`)).set(false);$("roomCode").textContent=room;show("lobby")}
+async function joinPlayer(){await set(ref(db,`rooms/${room}/players/${uid}`),{name:me,score:0,choice:"",online:true});onDisconnect(ref(db,`rooms/${room}/players/${uid}/online`)).set(false);$("roomCode").textContent=room;$("chatRoom").textContent=`Room ${room}`;$("chatFab").classList.remove("hidden");startChat();show("lobby")}
 const online=()=>Object.entries(state?.players||{}).filter(([,p])=>p.online!==false);
 function watch(){onValue(ref(db,`rooms/${room}`),s=>{state=s.val();if(!state)return;isHost=state.host===uid;document.querySelectorAll(".hostOnly").forEach(e=>e.style.display=isHost?"block":"none");renderPlayers();if(state.status==="lobby"){noAmb();show("lobby")}else{show("game");render();sync()}})}
 function renderPlayers(){$("players").innerHTML=online().map(([id,p])=>`<div class="player"><b>${esc(p.name)}</b><small>${id===state.host?"HOST":"CONNECTED"}</small></div>`).join("")}
@@ -49,3 +49,9 @@ $("small").onclick=()=>choose("small");$("big").onclick=()=>choose("big");
 async function choose(c){if(state?.status!=="choosing")return;tone(c==="small"?360:560,.14,"triangle",.035);await set(ref(db,`rooms/${room}/players/${uid}/choice`),c)}
 $("start").onclick=async()=>{if(!isHost)return;ready();const u={status:"choosing",round:1,dice:null,total:null,result:null,countdownEnd:null};Object.keys(state.players||{}).forEach(id=>u[`players/${id}/choice`]="");await update(ref(db,`rooms/${room}`),u)};
 $("next").onclick=async()=>{if(!isHost)return;$("resultTakeover").classList.add("hidden");lastCd="";const u={status:"choosing",round:(state.round||0)+1,dice:null,total:null,result:null,countdownEnd:null};Object.keys(state.players||{}).forEach(id=>u[`players/${id}/choice`]="");await update(ref(db,`rooms/${room}`),u);ready()};
+function startChat(){if(chatStarted||!room)return;chatStarted=true;const q=query(ref(db,`rooms/${room}/messages`),limitToLast(80));onValue(q,s=>{const msgs=Object.entries(s.val()||{}).sort((a,b)=>(a[1].time||0)-(b[1].time||0));renderChat(msgs);const newest=msgs.length?(msgs[msgs.length-1][1].time||0):0;if(!chatOpen&&newest>lastSeenChat){const fresh=msgs.filter(([,m])=>(m.time||0)>lastSeenChat&&m.uid!==uid).length;if(fresh){$("chatBadge").textContent=fresh>9?"9+":fresh;$("chatBadge").classList.remove("hidden");tone(760,.06,"triangle",.012)}}if(chatOpen)lastSeenChat=newest})}
+function renderChat(msgs){const box=$("chatMessages");if(!msgs.length){box.innerHTML='<div class="chatEmpty">No messages yet.<br>Say hello 👋</div>';return}box.innerHTML=msgs.map(([,m])=>{const mine=m.uid===uid,t=m.time?new Date(m.time).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}):"";return `<div class="msg ${mine?"mine":""}"><div class="msgMeta">${mine?"YOU":esc(m.name)} • ${t}</div><div class="msgBubble">${esc(m.text)}</div></div>`}).join("");requestAnimationFrame(()=>box.scrollTop=box.scrollHeight)}
+async function sendChat(){const i=$("chatInput"),t=i.value.trim();if(!t||!room||!uid)return;i.value="";await push(ref(db,`rooms/${room}/messages`),{uid,name:me,text:t.slice(0,180),time:Date.now()})}
+$("chatFab").onclick=()=>{chatOpen=true;$("chatPanel").classList.add("open");$("chatBadge").classList.add("hidden");lastSeenChat=Date.now();setTimeout(()=>$("chatInput").focus(),150)};
+$("chatClose").onclick=()=>{chatOpen=false;$("chatPanel").classList.remove("open");lastSeenChat=Date.now()};
+$("chatSend").onclick=sendChat;$("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();sendChat()}});
