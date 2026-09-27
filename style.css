@@ -84,3 +84,9 @@ input{font-size:16px!important}
   #loserNames > *{font-size:28px !important;padding:13px 20px !important}
 }
 .partyDecor{display:flex;justify-content:space-between;color:#ffd33d;font-size:20px;animation:sparkle 1s ease-in-out infinite alternate}.choice.small{box-shadow:0 0 25px #168cff55}.choice.big{box-shadow:0 0 25px #ff334f55}.choice.selected{transform:scale(1.04);filter:brightness(1.25)}.myResult{padding:20px!important;text-align:center;border-radius:20px!important}.myResult strong{display:block;font-size:clamp(32px,10vw,54px)!important;line-height:1;margin-bottom:12px;text-shadow:0 0 20px currentColor}.resultDecor{font-size:25px;color:#ffd43c;letter-spacing:9px;animation:sparkle .7s ease-in-out infinite alternate}.jackpotDice{font-size:clamp(54px,15vw,84px)!important}.jackpotTotal{font-size:clamp(110px,36vw,180px)!important}.jackpotWin{padding:8px 14px;border:3px solid #ffd44a;border-radius:18px;background:linear-gradient(#b80c16,#6f0008);box-shadow:0 0 24px #ffb000}.scoreRow.meWin{outline:2px solid #44ff76aa;background:#105a2a55}.scoreRow.roundLose{outline:2px solid #ff4152aa;background:#64081455}@keyframes sparkle{to{opacity:.65;filter:drop-shadow(0 0 10px #ffd33d);transform:scale(1.04)}}
+/* V9 — loser HALF GLASS challenge */
+.halfGlassCard{margin:14px auto 4px;padding:14px 16px;border:3px solid #ff4b5f;border-radius:20px;background:linear-gradient(180deg,rgba(135,0,18,.96),rgba(55,0,8,.96));box-shadow:0 0 22px rgba(255,40,65,.55),inset 0 0 18px rgba(255,255,255,.08);text-align:center;animation:halfPop .55s cubic-bezier(.2,1.5,.5,1)}
+.halfGlassIcon{font-size:46px;line-height:1}
+.halfGlassBig{font-size:clamp(34px,10vw,56px);font-weight:1000;line-height:1;color:#fff;text-shadow:0 0 12px #ff3048,0 0 28px #ff3048;margin-top:6px}
+.halfGlassSub{font-size:13px;font-weight:800;letter-spacing:.4px;color:#ffd9dd;margin-top:7px}
+@keyframes halfPop{0%{transform:scale(.35);opacity:0}75%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
