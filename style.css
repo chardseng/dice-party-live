@@ -17,3 +17,14 @@
 .chatDock .chatComposer input{height:31px;padding:7px 9px;border-radius:10px;font-size:11px}
 .chatDock .chatComposer button{height:31px;min-width:38px;padding:0 10px;border-radius:10px;font-size:15px}
 @media(max-width:560px){.chatDock{height:190px;margin-bottom:45px}}
+
+button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+button:disabled{opacity:.55;cursor:not-allowed}
+input{font-size:16px!important}
+@media(max-width:560px){
+  #app{width:100%;max-width:100%;padding-left:10px;padding-right:10px}
+  header{height:58px}
+  .panel,.table{width:100%;margin-left:0;margin-right:0}
+  .choiceRow{gap:8px}
+  .choice{min-width:0}
+}
