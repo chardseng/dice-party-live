@@ -81,3 +81,20 @@ function startChat(){if(chatStarted||!room)return;chatStarted=true;const q=query
 function renderChat(msgs){const box=$("chatMessages");if(!msgs.length){box.innerHTML='<div class="chatEmpty">No messages yet.<br>Say hello 👋</div>';return}box.innerHTML=msgs.map(([,m])=>{const mine=m.uid===uid,t=m.time?new Date(m.time).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}):"";return `<div class="msg ${mine?"mine":""}"><div class="msgMeta">${mine?"YOU":esc(m.name)} • ${t}</div><div class="msgBubble">${esc(m.text)}</div></div>`}).join("");requestAnimationFrame(()=>box.scrollTop=box.scrollHeight)}
 async function sendChat(){const i=$("chatInput"),t=i.value.trim();if(!t||!room||!uid)return;i.value="";await push(ref(db,`rooms/${room}/messages`),{uid,name:me,text:t.slice(0,180),time:Date.now()})}
 $("chatSend").onclick=sendChat;$("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();sendChat()}});
+
+
+const emojiBtn=$("emojiBtn"),emojiPicker=$("emojiPicker");
+if(emojiBtn&&emojiPicker){
+ emojiBtn.onclick=(e)=>{e.stopPropagation();emojiPicker.classList.toggle("hidden")};
+ emojiPicker.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+   const em=b.textContent;
+   const inp=$("chatInput");
+   if(inp){inp.value=(inp.value||"")+em;inp.focus()}
+   emojiPicker.classList.add("hidden");
+   if(["😂","🤣","🔥","🎲","🎉","💥","🏆","😱"].includes(em)){
+     const f=document.createElement("div");f.className="floatingReaction";f.textContent=em;
+     document.body.appendChild(f);setTimeout(()=>f.remove(),1350);
+   }
+ });
+ document.addEventListener("click",e=>{if(!emojiPicker.contains(e.target)&&e.target!==emojiBtn)emojiPicker.classList.add("hidden")});
+}

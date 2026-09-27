@@ -202,3 +202,11 @@ input{font-size:16px!important}
  #loserNames > *, .allLoserNames > span{font-size:17px!important;padding:8px 11px!important}
  .loserNo{width:30px}
 }
+
+/* V15 — compact chat emoji + animated reactions */
+.emojiBtn{flex:0 0 42px!important;width:42px!important;height:42px!important;min-width:42px!important;padding:0!important;border-radius:50%!important;font-size:22px!important;background:#18a957!important;border:1px solid #5cff91!important;box-shadow:0 0 12px rgba(24,169,87,.28)}
+.emojiPicker{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);z-index:9999;width:min(92vw,390px);display:grid;grid-template-columns:repeat(8,1fr);gap:5px;padding:9px;border:1px solid #33415e;border-radius:18px;background:rgba(7,13,28,.97);box-shadow:0 10px 35px rgba(0,0,0,.55)}
+.emojiPicker.hidden{display:none!important}.emojiPicker button{min-width:0!important;padding:7px 2px!important;font-size:23px!important;border:0!important;background:transparent!important;border-radius:10px!important}.emojiPicker button:active{transform:scale(.82)}
+.floatingReaction{position:fixed;left:50%;top:55%;z-index:10000;font-size:76px;pointer-events:none;animation:reactionFly 1.25s ease-out forwards;filter:drop-shadow(0 0 15px rgba(255,255,255,.55))}
+@keyframes reactionFly{0%{opacity:0;transform:translate(-50%,20px) scale(.25) rotate(-12deg)}25%{opacity:1;transform:translate(-50%,-15px) scale(1.2) rotate(5deg)}100%{opacity:0;transform:translate(-50%,-190px) scale(.8) rotate(12deg)}}
+@media(max-width:560px){.emojiPicker{grid-template-columns:repeat(8,1fr);bottom:68px}.emojiPicker button{font-size:21px!important}.floatingReaction{font-size:64px}}
