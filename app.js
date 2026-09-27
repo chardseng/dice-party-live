@@ -31,7 +31,7 @@ $("lobbyMusic").onclick=()=>{lobbyMusicOn=!lobbyMusicOn;$("lobbyMusic").textCont
 authReady=signInAnonymously(auth).then(c=>{uid=c.user.uid;$("status").textContent="● Online";$("create").disabled=false;$("join").disabled=false;return uid}).catch(err=>{$("status").textContent="● Connection error";console.error("Anonymous auth failed",err);throw err});
 $("create").onclick=async()=>{try{$("create").disabled=true;$("create").textContent="CONNECTING…";await authReady;if(!uid)throw new Error("Not signed in");me=$("name").value.trim()||"Host";room=Math.random().toString(36).slice(2,8).toUpperCase();await set(ref(db,`rooms/${room}`),{host:uid,status:"lobby",round:0,dice:null,result:null,total:null,countdownEnd:null,created:Date.now()});await joinPlayer();watch()}catch(err){console.error(err);alert("Cannot create room. Please check internet connection and refresh the page.");$("status").textContent="● Connection error"}finally{$("create").disabled=false;$("create").textContent="CREATE ROOM"}};
 $("join").onclick=async()=>{try{$("join").disabled=true;$("join").textContent="CONNECTING…";await authReady;if(!uid)throw new Error("Not signed in");me=$("name").value.trim()||"Player";room=$("roomInput").value.trim().toUpperCase();if(!room){alert("Enter room code.");return}const s=await get(ref(db,`rooms/${room}`));if(!s.exists()){alert("Room not found.");return}await joinPlayer();watch()}catch(err){console.error(err);alert("Cannot join room. Please check internet connection and refresh the page.")}finally{$("join").disabled=false;$("join").textContent="JOIN ROOM"}};
-async function joinPlayer(){await set(ref(db,`rooms/${room}/players/${uid}`),{name:me,score:0,choice:"",online:true});onDisconnect(ref(db,`rooms/${room}/players/${uid}/online`)).set(false);$("roomCode").textContent=room;$("chatRoom").textContent=`Room ${room}`;$("chatDock").classList.remove("hidden");startChat();show("lobby")}
+async function joinPlayer(){await set(ref(db,`rooms/${room}/players/${uid}`),{name:me,score:0,choice:"",online:true});onDisconnect(ref(db,`rooms/${room}/players/${uid}/online`)).set(false);$("roomCode").textContent=room;$("chatRoom").textContent=`Room ${room}`;$("chatDock").classList.remove("hidden");startChat();startBasketballReactions();show("lobby")}
 const online=()=>Object.entries(state?.players||{}).filter(([,p])=>p.online!==false);
 function watch(){onValue(ref(db,`rooms/${room}`),s=>{state=s.val();if(!state)return;isHost=state.host===uid;document.querySelectorAll(".hostOnly").forEach(e=>e.style.display=isHost?"block":"none");renderPlayers();if(state.status==="lobby"){noAmb();show("lobby");startLobbyMusic()}else{stopLobbyMusic();show("game");render();sync()}})}
 function renderPlayers(){$("players").innerHTML=online().map(([id,p])=>`<div class="player"><b>${esc(p.name)}</b><small>${id===state.host?"HOST":"CONNECTED"}</small></div>`).join("")}
@@ -97,4 +97,39 @@ if(emojiBtn&&emojiPicker){
    }
  });
  document.addEventListener("click",e=>{if(!emojiPicker.contains(e.target)&&e.target!==emojiBtn)emojiPicker.classList.add("hidden")});
+}
+\n\n// V16 — Firebase-synced basketball penguin sticker for everyone in the room
+let basketballReactionsStarted=false;
+let lastBasketballReactionKey="";
+function showBasketballSticker(){
+  const layer=$("basketballAnimationLayer");
+  if(!layer)return;
+  const sticker=document.createElement("img");
+  sticker.src="basketball-dribble.gif";
+  sticker.alt="";
+  sticker.className="basketballPartySticker";
+  layer.appendChild(sticker);
+  setTimeout(()=>sticker.remove(),5300);
+}
+function startBasketballReactions(){
+  if(basketballReactionsStarted||!room)return;
+  basketballReactionsStarted=true;
+  const q=query(ref(db,`rooms/${room}/reactions`),limitToLast(1));
+  onValue(q,s=>{
+    const entries=Object.entries(s.val()||{});
+    if(!entries.length)return;
+    const [key,r]=entries[entries.length-1];
+    if(key===lastBasketballReactionKey)return;
+    lastBasketballReactionKey=key;
+    if(r?.type==="basketball" && Date.now()-(r.time||0)<15000)showBasketballSticker();
+  });
+}
+const basketballStickerBtn=$("basketballStickerBtn");
+if(basketballStickerBtn){
+  basketballStickerBtn.addEventListener("click",async()=>{
+    if(!room||!uid)return;
+    try{
+      await push(ref(db,`rooms/${room}/reactions`),{type:"basketball",uid,name:me,time:Date.now()});
+    }catch(err){console.error("Basketball sticker failed",err)}
+  });
 }
