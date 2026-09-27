@@ -98,7 +98,9 @@ if(emojiBtn&&emojiPicker){
  });
  document.addEventListener("click",e=>{if(!emojiPicker.contains(e.target)&&e.target!==emojiBtn)emojiPicker.classList.add("hidden")});
 }
-\n\n// V16 — Firebase-synced basketball penguin sticker for everyone in the room
+
+
+// V16 — Firebase-synced basketball penguin sticker for everyone in the room
 let basketballReactionsStarted=false;
 let lastBasketballReactionKey="";
 function showBasketballSticker(){
