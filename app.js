@@ -123,7 +123,10 @@ function startBasketballReactions(){
     const [key,r]=entries[entries.length-1];
     if(key===lastBasketballReactionKey)return;
     lastBasketballReactionKey=key;
-    if(r?.type==="basketball" && Date.now()-(r.time||0)<15000)showBasketballSticker();
+    if(Date.now()-(r?.time||0)<15000){
+      if(r?.type==="basketball")showBasketballSticker();
+      if(r?.type==="dance")showDanceSticker();
+    }
   });
 }
 const basketballStickerBtn=$("basketballStickerBtn");
@@ -133,5 +136,26 @@ if(basketballStickerBtn){
     try{
       await push(ref(db,`rooms/${room}/reactions`),{type:"basketball",uid,name:me,time:Date.now()});
     }catch(err){console.error("Basketball sticker failed",err)}
+  });
+}
+
+// V17 — Firebase-synced dancing sticker for everyone in the room
+function showDanceSticker(){
+  const layer=$("basketballAnimationLayer");
+  if(!layer)return;
+  const sticker=document.createElement("img");
+  sticker.src="dancing_girl.gif";
+  sticker.alt="";
+  sticker.className="dancePartySticker";
+  layer.appendChild(sticker);
+  setTimeout(()=>sticker.remove(),4800);
+}
+const danceStickerBtn=$("danceStickerBtn");
+if(danceStickerBtn){
+  danceStickerBtn.addEventListener("click",async()=>{
+    if(!room||!uid)return;
+    try{
+      await push(ref(db,`rooms/${room}/reactions`),{type:"dance",uid,name:me,time:Date.now()});
+    }catch(err){console.error("Dance sticker failed",err)}
   });
 }
