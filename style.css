@@ -118,3 +118,13 @@ input{font-size:16px!important}
  .resultChoice{font-size:17px;padding:8px;margin:5px 0}
  #next{min-height:48px;margin-top:8px;position:relative;z-index:5}
 }
+
+/* V11 — show final draw number on personal result */
+.personalDraw{margin:6px auto 8px;text-align:center;font-weight:900;font-size:18px;color:#dce8ff}
+.personalDraw .drawNo{display:inline-block;font-size:clamp(42px,12vw,62px);line-height:.9;font-weight:1000;color:#fff;margin:0 7px;text-shadow:0 0 12px #fff,0 0 24px #ff9f00}
+.resultCard.playerLose .personalDraw{color:#ffd5da}
+.resultCard.playerLose .personalDraw .drawNo{text-shadow:0 0 10px #fff,0 0 24px #ff3048}
+@media(max-width:560px){
+ .personalDraw{font-size:14px;margin:3px auto 5px}
+ .personalDraw .drawNo{font-size:11vw}
+}
