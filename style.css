@@ -229,3 +229,13 @@ input{font-size:16px!important}
 @keyframes danceStickerPop{0%{opacity:0;transform:translateX(-50%) translateY(80px) scale(.2) rotate(-8deg)}12%{opacity:1;transform:translateX(-50%) translateY(0) scale(1.08) rotate(3deg)}25%{transform:translateX(-58%) translateY(-8px) scale(1) rotate(-3deg)}42%{transform:translateX(-42%) translateY(0) scale(1.05) rotate(3deg)}60%{transform:translateX(-58%) translateY(-8px) scale(1) rotate(-3deg)}78%{opacity:1;transform:translateX(-42%) translateY(0) scale(1.05) rotate(3deg)}100%{opacity:0;transform:translateX(-50%) translateY(-100px) scale(.65) rotate(8deg)}}
 @media(max-width:560px){.danceStickerBtn{flex-basis:36px!important;width:36px!important;height:36px!important;min-width:36px!important}.dancePartySticker{bottom:18%;width:155px}}
 @media(prefers-reduced-motion:reduce){.dancePartySticker{animation-duration:1.2s}}
+
+/* V18: compact synchronized previous-round history */
+.drawHistory{width:100%;box-sizing:border-box;margin:12px auto 14px;padding:12px;border:1px solid rgba(255,202,75,.42);border-radius:16px;background:linear-gradient(135deg,rgba(20,25,50,.94),rgba(35,17,52,.95));box-shadow:0 4px 20px #0005}
+.drawHistoryTitle{display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:900;letter-spacing:.6px;color:#ffd978;margin-bottom:9px}
+.drawHistoryTitle span{font-size:10px;color:#c5c9da;align-self:center}
+.drawHistoryItems{display:flex;gap:7px;overflow-x:auto;padding:2px 1px 7px;scrollbar-width:thin;scrollbar-color:#ffd978 transparent}
+.historyItem{flex:0 0 auto;min-width:106px;padding:8px 10px;border-radius:11px;background:#10182d;border:1px solid #394663;display:grid;grid-template-columns:auto auto;align-items:center;gap:3px 8px;text-align:center}
+.historyRound{font-size:11px;color:#c9d1e8;text-align:left}.historyDice{font-size:18px;white-space:nowrap;text-align:right}.historyTotal{font-size:24px;color:#fff;text-align:left}.historySide{font-size:12px;text-align:right}.historyBig .historySide{color:#ffc84b}.historySmall .historySide{color:#56e3b1}
+.historyEmpty{font-size:12px;color:#ccd2e2;padding:9px}.historyNote{font-size:10px;color:#adb8d0;margin-top:5px;text-align:left}
+@media(max-width:480px){.drawHistory{padding:10px;margin:10px auto}.historyItem{min-width:97px;padding:7px}.historyDice{font-size:16px}}
